@@ -25,3 +25,15 @@
 #container a {
   text-decoration: none;
 }
+
+.cancel-button{
+  background-color: var(--ion-color-danger);
+}
+
+.cancel-button span{
+  background-color: #eb445a;
+}
+
+.save-button span{
+  background-color: #2dd36f;
+}
