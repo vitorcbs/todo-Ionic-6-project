@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { TarefaService } from 'src/app/services/tarefa.service';
 
@@ -9,7 +9,16 @@ import { TarefaService } from 'src/app/services/tarefa.service';
 })
 export class HomePage {
 
+  tarefaCollection: any[] = []
   constructor(private alertController: AlertController, private tarefaService: TarefaService) {}
+
+  ionViewDidEnter(){  //ngOnInit
+    this.listarTarefas()
+  }
+
+  listarTarefas(){
+    this.tarefaCollection = this.tarefaService.listar()
+  }
 
   async showAdd() {
     const alert = await this.alertController.create({
@@ -33,10 +42,16 @@ export class HomePage {
         handler: (tarefa) => {
           console.log(tarefa)
           this.tarefaService.salvar(tarefa)
+          this.listarTarefas()
         }
       }]
     })
 
     await alert.present()
+  }
+
+  excluir(item:any){
+    this.tarefaService.excluir(item)
+    this.listarTarefas()
   }
 }
