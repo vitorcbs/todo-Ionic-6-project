@@ -10,7 +10,7 @@ export class TarefaService {
   constructor() {}
 
   salvar(tarefa: any) {
-    tarefa.status = 'Pendete';
+    tarefa.feito = 'Pendete';
 
     //Obter info do local storage
     let value = localStorage.getItem(this.key);
@@ -42,10 +42,35 @@ export class TarefaService {
 
     let itemCollection: any[] = JSON.parse(value);
 
-    let resultItemCollection = itemCollection.filter(item => {
+    let resultItemCollection = itemCollection.filter((item) => {
       item.tarefa != tarefa.tarefa;
     });
-    console.log(resultItemCollection)
-    localStorage.setItem(this.key, JSON.stringify(resultItemCollection))
+    console.log(resultItemCollection);
+    localStorage.setItem(this.key, JSON.stringify(resultItemCollection));
+  }
+
+  atualizar(tarefa: any) {
+    //Obter info do local storage
+    let value = localStorage.getItem(this.key);
+    if (value == null || value == undefined) {
+      return;
+    } else {
+      let collection: any[] = JSON.parse(value);
+      collection.forEach(item => {
+        if (item.tarefa == tarefa.tarefa){
+          item.feito = tarefa.feito;
+        }
+      })
+
+      let tarefaUpdate: any = collection.filter((item) => {
+        return item.tarefa == tarefa.tarefa;
+      });
+      tarefaUpdate.feito = tarefa.feito;
+      let itemRemovidoCollection: any[] = collection.filter((item) => {
+        return item.tarefa != tarefa.tarefa;
+      });
+      itemRemovidoCollection.push(tarefaUpdate)
+      localStorage.setItem(this.key, JSON.stringify(collection));
+    }
   }
 }
