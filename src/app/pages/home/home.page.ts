@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
+import { Tarefa } from 'src/app/models/tarefa.model';
 import { TarefaService } from 'src/app/services/tarefa.service';
 
 @Component({
@@ -16,8 +17,8 @@ export class HomePage {
     this.listarTarefas()
   }
 
-  listarTarefas(){
-    this.tarefaCollection = this.tarefaService.listar()
+  listarTarefas() {
+    this.tarefaCollection = this.tarefaService.listar().map((tarefa) => ({ ...tarefa }));
   }
 
   async showAdd() {
@@ -50,16 +51,16 @@ export class HomePage {
     await alert.present()
   }
 
-  excluir(item:any){
-    this.tarefaService.excluir(item)
-    this.listarTarefas()
+  excluir(item: any) {
+    this.tarefaService.excluir(item);
+    this.listarTarefas();
   }
 
-  async openActions(tarefa: any){
+  async openActions(tarefa: Tarefa){
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'O que deseja fazer?',
       buttons: [{
-        text: tarefa.feito == 'Pendente' ? 'Marcar como pendente' : 'Marcar como concluida',
+        text: tarefa.feito == false ? 'Marcar como concluida' : 'Marcar como pendente',
         icon: tarefa.feito ? 'radio-button-off' : 'checkmark-circle',
         handler: () => {
           tarefa.feito = !tarefa.feito;

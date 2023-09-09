@@ -10,7 +10,7 @@ export class TarefaService {
   constructor() {}
 
   salvar(tarefa: any) {
-    tarefa.feito = 'Pendete';
+    tarefa.feito = false;
 
     //Obter info do local storage
     let value = localStorage.getItem(this.key);
@@ -43,34 +43,52 @@ export class TarefaService {
     let itemCollection: any[] = JSON.parse(value);
 
     let resultItemCollection = itemCollection.filter((item) => {
-      item.tarefa != tarefa.tarefa;
+      return item.tarefa !== tarefa.tarefa;
     });
-    console.log(resultItemCollection);
+
     localStorage.setItem(this.key, JSON.stringify(resultItemCollection));
   }
 
+
+  // atualizar(tarefa: any) {
+  //   //Obter info do local storage
+  //   let value = localStorage.getItem(this.key);
+  //   if (value == null || value == undefined) {
+  //     return;
+  //   } else {
+  //     let collection: any[] = JSON.parse(value);
+  //     collection.forEach(item => {
+  //       if (item.tarefa == tarefa.tarefa){
+  //         item.feito = tarefa.feito;
+  //       }
+  //     })
+
+  //     let tarefaUpdate: any = collection.filter((item) => {
+  //       return item.tarefa == tarefa.tarefa;
+  //     });
+  //     tarefaUpdate.feito = tarefa.feito;
+  //     let itemRemovidoCollection: any[] = collection.filter((item) => {
+  //       return item.tarefa != tarefa.tarefa;
+  //     });
+  //     itemRemovidoCollection.push(tarefaUpdate)
+  //     localStorage.setItem(this.key, JSON.stringify(collection));
+  //   }
+  // }
+
   atualizar(tarefa: any) {
-    //Obter info do local storage
     let value = localStorage.getItem(this.key);
     if (value == null || value == undefined) {
       return;
     } else {
       let collection: any[] = JSON.parse(value);
-      collection.forEach(item => {
-        if (item.tarefa == tarefa.tarefa){
-          item.feito = tarefa.feito;
+      for (let i = 0; i < collection.length; i++) {
+        if (collection[i].tarefa === tarefa.tarefa) {
+          collection[i].feito = tarefa.feito;
+          break; // Saia do loop assim que a tarefa for encontrada e atualizada.
         }
-      })
-
-      let tarefaUpdate: any = collection.filter((item) => {
-        return item.tarefa == tarefa.tarefa;
-      });
-      tarefaUpdate.feito = tarefa.feito;
-      let itemRemovidoCollection: any[] = collection.filter((item) => {
-        return item.tarefa != tarefa.tarefa;
-      });
-      itemRemovidoCollection.push(tarefaUpdate)
+      }
       localStorage.setItem(this.key, JSON.stringify(collection));
     }
   }
+
 }
